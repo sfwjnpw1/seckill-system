@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: seckill-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+        namespace: seckill
+        group: DEFAULT_GROUP
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://seckill-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=0
+        - id: product-service
+          uri: lb://seckill-product
+          predicates:
+            - Path=/product/**
+          filters:
+            - StripPrefix=0
+        - id: seckill-service
+          uri: lb://seckill-seckill
+          predicates:
+            - Path=/seckill/**
+          filters:
+            - StripPrefix=0
+        - id: order-service
+          uri: lb://seckill-order
+          predicates:
+            - Path=/order/**
+          filters:
+            - StripPrefix=0
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.manus.seckill: DEBUG
